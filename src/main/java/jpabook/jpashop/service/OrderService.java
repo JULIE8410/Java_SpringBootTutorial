@@ -5,9 +5,12 @@ import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.repository.ItemRepository;
 import jpabook.jpashop.repository.MemberRepository;
 import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.repository.OrderSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -17,6 +20,10 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
+
+
+    // 서비스 계층은 단순히 엔티티에 필요한 요청을 위임하고 있음 (도메인 모델 패턴)  <-> 트랜잭션 스크립트 패턴턴
+
 
     // 주문
     @Transactional
@@ -39,6 +46,7 @@ public class OrderService {
 
         // 주문 저장
         orderRepository.save(order);
+        // Order 클래스내에 OrderItem 과 Delivery CascadeType.ALL 설정해 놓음 - order persist 될때 다 같이 됨
         return order.getId();
     }
 
@@ -51,6 +59,14 @@ public class OrderService {
 
         // 주문 취소
         order.cancel();
+
+        // ** JPA 는 dirty checking 통해서 스스로 데이터 변경내역을 감지하고 변경내역을 DB 에 업데이트(업데이트 쿼리 날림)
+
+    }
+
+    // 검색
+    public List<Order> findOrders(OrderSearch orderSearch){
+        return orderRepository.findAll(orderSearch);
     }
 
 }

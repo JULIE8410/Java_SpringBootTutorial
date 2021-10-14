@@ -19,14 +19,14 @@ public class Category {
     private String name;
 
     @ManyToMany
-    @JoinTable(name = "category_item",  //테이블 자동생성함?
-               joinColumns = @JoinColumn(name = "category_id"),
-               inverseJoinColumns = @JoinColumn(name = "item_id"))  //ITEM 테이블 명시안해줘도 됨?
+    @JoinTable(name = "category_item",  // 다대다 관계 풀어내기 위해 중간테이블에 맵핑, 실무에서는 거의 사용하지 않음
+            joinColumns = @JoinColumn(name = "category_id"),  // 중간테이블의 컬럼명
+            inverseJoinColumns = @JoinColumn(name = "item_id"))  // ITEM 테이블쪽
     private List<Item> items = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)  // 이 부분은 왜 연결하는지 잘 모르겠음, OneToMany 되야한다고 생각했는데...
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private Category parent;  // Category 내에 Category 가지는 이유
+    private Category parent;
 
     @OneToMany(mappedBy = "parent")
     private List<Category> child = new ArrayList<>();
