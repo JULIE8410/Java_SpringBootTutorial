@@ -18,11 +18,11 @@ public class ItemRepository {
         // id 가 없으면 신규로 보고 persist() 진행 (JPA 에 저장하기 전까지는 Id 없음)
         // id 가 있으면 이미 JPA 를 통해서 DB에 저장된 적 있음, 따라서 엔티티를 수정한다고 보고 merge() 실행 (Update 의 느낌)
         if(item.getId() == null){
-
+            // item 신규 등록
             em.persist(item);
 
         }else{
-
+            // item 업데이트
             em.merge(item);
 
         }
