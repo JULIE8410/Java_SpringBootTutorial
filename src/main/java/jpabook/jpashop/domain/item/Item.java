@@ -17,7 +17,9 @@ import java.util.List;
 @Getter @Setter
 public abstract class Item {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "ITEM_SEQ_GENERATOR")
     @Column(name = "item_id")
     private Long id;
 
