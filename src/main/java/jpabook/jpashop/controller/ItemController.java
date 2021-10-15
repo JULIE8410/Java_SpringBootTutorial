@@ -52,8 +52,8 @@ public class ItemController {
         // 클릭한 아이템 id 가 넘어옴, id 를 가지고 해당되는 item 을 찾아옴
         Book item = (Book) itemService.findOne(itemId);
 
-        // 기존의 item 을 수정해야 하는 경우이기 때문에, BookForm 에 기존 자료 넣어줌
-        BookForm form = new BookForm();
+
+        BookForm form = new BookForm();  // 준영속 엔티티
         form.setId(item.getId());
         form.setName(item.getName());
         form.setPrice(item.getPrice());
@@ -67,19 +67,23 @@ public class ItemController {
     }
 
     @PostMapping("/items/{itemId}/edit")
-    public String updateItem(@ModelAttribute("form") BookForm form, @PathVariable String itemId){ //@ModelAttribute("form"): updateItemForm 에서 넘어올때의 object 이름
+    public String updateItem(@PathVariable("itemId") Long itemId, @ModelAttribute("form") BookForm form){ //@ModelAttribute("form"): updateItemForm 에서 넘어올때의 object 이름
 
+        // 더 나은 방법 (but 나중에 수정해야 할 상황이 많아면? DTO 만드는 것도 생각해볼수있음)
+        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
+
+        /*
         Book book = new Book();
-
-        // form 에서 넘어온 데이터를 book 에 조립
+        // 기존의 item 을 수정해야 하는 경우이기 때문에, BookForm 에 기존 자료 넣어줌
+        // form 에서 넘어온 데이터를 book 에 조립 (but 컨트롤러에서 엔티티를 생성하는 것은 바람직하지 못한 방법...)
         book.setId(form.getId());
         book.setName(form.getName());
         book.setPrice(form.getPrice());
         book.setStockQuantity(form.getStockQuantity());
         book.setAuthor(form.getAuthor());
         book.setIsbn(form.getIsbn());
-
         itemService.saveItem(book);
+         */
 
         // 생각해 볼 부분: url 에 itemId 가 조작되서 넘어올 수도 있다는 점 (다른 사람 데이터 수정될 수 있음) 취약점
         // 서비스 계층(뒷단) 이던 앞단이던 요청하는 유저가 해당요청에 대한 권한이 있는지 체크해보는 로직 필요할 수 있음

@@ -12,7 +12,7 @@ import java.util.List;
 @Getter @Setter
 public class Category {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CATEGORY_SEQ_GENERATOR")
     @Column(name = "category_id")
     private Long id;
 

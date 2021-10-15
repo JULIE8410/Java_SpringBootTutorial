@@ -22,12 +22,16 @@ public class OrderService {
     private final ItemRepository itemRepository;
 
 
-    // 서비스 계층은 단순히 엔티티에 필요한 요청을 위임하고 있음 (도메인 모델 패턴)  <-> 트랜잭션 스크립트 패턴턴
+    // 서비스 계층은 단순히 엔티티에 필요한 요청을 위임하고 있음 (도메인 모델 패턴)  <-> 트랜잭션 스크립트 패턴
 
 
     // 주문
     @Transactional
     public Long order(Long memberId, Long itemId, int count){
+
+        // controller 에서는 식별자 들만 넘기고, Transaction 이 일어나는 service 계층에서 엔티티 접근하는게 바람직할 것
+        // 핵심비즈니스 로직을 service 계층에서 하게 되면, 트랜잭션 내에서 엔티티 다루면 영속성 관련 처리가 가능함
+        // 트랜잭션 없이
 
         // 엔티티 조회
         Member member = memberRepository.findOne(memberId);
